@@ -105,7 +105,7 @@ struct Splay {
         x->ch[c] = y;
         y->p = x;
         y->update();
-        if (y = root) root = x;
+        if (y == root) root = x;
     }
 
     //splay node x until its father becomes f
@@ -180,7 +180,7 @@ struct Splay {
             x->ch[c]->p = x;
             splay(x->ch[c], null);
         } else
-            ins(x->ch[0], v);
+            ins(x->ch[c], v);
     }
 
     //insert array a[l...r] between [x, x + 1]
