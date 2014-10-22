@@ -36,6 +36,10 @@ node *root, *null;
 
 #define keytree root->ch[1]->ch[0]
 
+/*
+notes: At first, there are two nodes in the tree, the actual sequences is between them.
+        The real k-th element is (k + 1)-th element in splay.
+*/
 template <int N>
 struct Splay {
     int sz, top;
@@ -51,6 +55,7 @@ struct Splay {
         root->ch[1]->p = root;
     }
 
+    //create a new node
     node *NewNode(int val) {
         node *p;
         if (top) p = stk[top--];
@@ -61,6 +66,7 @@ struct Splay {
         return p;
     }
 
+    //build splay tree with elements a[l...r]
     node* build(int a[], int l, int r) {
         if (l > r) return null;
         int mid = (l + r) >> 1;
@@ -73,6 +79,7 @@ struct Splay {
         return p;
     }
 
+    //build splay tree with elements a[l...r]
     void maketree(int a[], int l, int r) {
         init();
         keytree = build(a, l, r);
@@ -80,6 +87,7 @@ struct Splay {
         splay(keytree, null);
     }
 
+    //c = 0, LeftRotate; c = 1, RightRotate
     void rotate(node *x, int c) {
         node *y = x->p;
         y->pushdown();
@@ -100,6 +108,7 @@ struct Splay {
         if (y = root) root = x;
     }
 
+    //splay node x until its father becomes f
     void splay(node *x, node *f) {
         x->pushdown();
         while (x->p != f) {
@@ -121,6 +130,7 @@ struct Splay {
         x->update();
     }
 
+    //select k-th node and splay until its father becomes x
     void select(int kth, node *x) {
         node *cur = root;
         while (1) {
@@ -136,6 +146,7 @@ struct Splay {
         splay(cur, x);
     }
 
+    //all elements between [l, r] add value v
     void add(int l, int r, int v) {
         select(l, null);
         select(r + 2, root);
@@ -143,12 +154,14 @@ struct Splay {
         splay(keytree, null);
     }
 
+    //reverse elements between interval [l, r]
     void reverse(int l, int r) {
         select(l, null);
         select(r + 1, root);
         keytree->reverse();
     }
 
+    //insert a node with value v between [x, x + 1]
     void insert(int x, int v) {
         select(x + 1, null);
         select(x + 2, root);
@@ -158,6 +171,7 @@ struct Splay {
         splay(keytree, null);
     }
 
+    //ins(root, v) -- insert a node with value v(the elements on splay is ordered)
     void ins(node *x, int v) {
         int c = x->key < v;
         x->pushdown();
@@ -169,6 +183,7 @@ struct Splay {
             ins(x->ch[0], v);
     }
 
+    //insert array a[l...r] between [x, x + 1]
     void insert(int x, int l, int r, int a[]) {
         select(x + 1, null);
         select(x + 2, root);
@@ -185,6 +200,7 @@ struct Splay {
         stk[++top] = x;
     }
 
+    //delete nodes between interval [l, r]
     void dele(int l, int r) {
         select(l, null);
         select(r + 2, root);
@@ -194,6 +210,7 @@ struct Splay {
         root->update();
     }
 
+    //delete the root of the splay tree
     void deleroot() {
         node *oldroot = root;
         root = root->ch[1];
@@ -205,11 +222,13 @@ struct Splay {
         stk[++top] = oldroot;
     }
 
+    //delete the x-th node
     void dele(int x) {
         select(x + 1, null);
         deleroot();
     }
 
+    //vis(root) -- visit the whole splay tree and print the information of each node
     void vis(node *x) {
         if (x == null) return;
         x->pushdown();
