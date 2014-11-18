@@ -157,7 +157,7 @@ struct Splay {
     //reverse elements between interval [l, r]
     void reverse(int l, int r) {
         select(l, null);
-        select(r + 1, root);
+        select(r + 2, root);
         keytree->reverse();
     }
 
